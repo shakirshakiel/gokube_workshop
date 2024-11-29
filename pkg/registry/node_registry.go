@@ -3,7 +3,6 @@ package registry
 import (
 	"context"
 	"errors"
-	"fmt"
 	"path"
 
 	"gokube/pkg/api"
@@ -38,63 +37,32 @@ func generateKey(prefix, name string) string {
 
 // CreateNode stores a new Node
 func (r *NodeRegistry) CreateNode(ctx context.Context, node *api.Node) error {
-	key := generateKey(nodePrefix, node.Name)
-	existingNode := &api.Node{}
-
-	if err := r.storage.Get(ctx, key, existingNode); err == nil {
-		return fmt.Errorf("%w: %s", ErrNodeAlreadyExists, node.Name)
-	}
-
-	// Validate Node spec
-	if err := node.Validate(); err != nil {
-		return fmt.Errorf("%w: %v", ErrNodeInvalid, err)
-	}
-
-	return r.storage.Create(ctx, key, node)
+	//assignment 1. Implement create node.
+	return nil
 }
 
 // GetNode retrieves a Node by name
 func (r *NodeRegistry) GetNode(ctx context.Context, name string) (*api.Node, error) {
-	key := generateKey(nodePrefix, name)
-	node := &api.Node{}
-
-	if err := r.storage.Get(ctx, key, node); err != nil {
-		switch {
-		case errors.Is(err, storage.ErrNotFound):
-			return nil, fmt.Errorf("%w: %s", ErrNodeNotFound, name)
-		default:
-			return nil, fmt.Errorf("%w: failed to get node: %v", ErrInternal, err)
-		}
-	}
-
-	return node, nil
+	//assignment 1. Implement get node.
+	return nil, ErrNodeNotFound
 }
 
 // UpdateNode updates an existing Node
 func (r *NodeRegistry) UpdateNode(ctx context.Context, node *api.Node) error {
-	key := generateKey(nodePrefix, node.Name)
-
-	// Validate Node spec
-	if err := node.Validate(); err != nil {
-		return fmt.Errorf("%w: %v", ErrNodeInvalid, err)
-	}
-
-	return r.storage.Update(ctx, key, node)
+	//assignment 3. Implement updateNode.
+	return nil
 }
 
 // DeleteNode removes a Node by name
 func (r *NodeRegistry) DeleteNode(ctx context.Context, name string) error {
-	key := generateKey(nodePrefix, name)
-	return r.storage.Delete(ctx, key)
+	//assignment 4. Implement updateNode.
+
+	return nil
 }
 
 // ListNodes retrieves all Nodes
 func (r *NodeRegistry) ListNodes(ctx context.Context) ([]*api.Node, error) {
-	nodes := make([]*api.Node, 0)
+	//assignment 5. Implement ListNodes.
 
-	if err := r.storage.List(ctx, nodePrefix, &nodes); err != nil {
-		return nil, fmt.Errorf("%w: %v", ErrListNodesFailed, err)
-	}
-
-	return nodes, nil
+	return nil, nil
 }

@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"errors"
-	"fmt"
 	"net/http"
 
 	"gokube/pkg/api"
@@ -28,37 +26,17 @@ func (h *NodeHandler) CreateNode(request *restful.Request, response *restful.Res
 		api.WriteError(response, http.StatusBadRequest, err)
 		return
 	}
+	//assignment 6: Hook in nodeRegistry with the handler.
 
-	if err := h.nodeRegistry.CreateNode(request.Request.Context(), node); err != nil {
-		switch {
-		case errors.Is(err, registry.ErrNodeAlreadyExists):
-			api.WriteError(response, http.StatusConflict, err)
-		case errors.Is(err, registry.ErrNodeInvalid):
-			api.WriteError(response, http.StatusBadRequest, err)
-		default:
-			api.WriteError(response, http.StatusInternalServerError, err)
-		}
-		return
-	}
-
-	api.WriteResponse(response, http.StatusCreated, node)
+	api.WriteResponse(response, http.StatusNotImplemented, node)
 }
 
 // GetNode handles GET requests to retrieve a Node
 func (h *NodeHandler) GetNode(request *restful.Request, response *restful.Response) {
 	name := request.PathParameter("name")
-	node, err := h.nodeRegistry.GetNode(request.Request.Context(), name)
-	if err != nil {
-		switch {
-		case errors.Is(err, registry.ErrNodeNotFound):
-			api.WriteError(response, http.StatusNotFound, err)
-		default:
-			api.WriteError(response, http.StatusInternalServerError, err)
-		}
-		return
-	}
+	//assignment 7: Hook nodeRegistry.
+	api.WriteResponse(response, http.StatusNotImplemented, name)
 
-	api.WriteResponse(response, http.StatusOK, node)
 }
 
 // UpdateNode handles PUT requests to update a Node
@@ -69,55 +47,25 @@ func (h *NodeHandler) UpdateNode(request *restful.Request, response *restful.Res
 		api.WriteError(response, http.StatusBadRequest, err)
 		return
 	}
+	_ = name //Assignment: Hook nodeRegistry.
 
-	if name != node.Name {
-		api.WriteError(response, http.StatusBadRequest, fmt.Errorf("node name in URL does not match the name in the request body"))
-		return
-	}
-
-	if _, err := h.nodeRegistry.GetNode(request.Request.Context(), name); err != nil {
-		switch {
-		case errors.Is(err, registry.ErrNodeNotFound):
-			api.WriteError(response, http.StatusNotFound, err)
-		default:
-			api.WriteError(response, http.StatusInternalServerError, err)
-		}
-		return
-	}
-
-	if err := h.nodeRegistry.UpdateNode(request.Request.Context(), node); err != nil {
-		switch {
-		case errors.Is(err, registry.ErrNodeInvalid):
-			api.WriteError(response, http.StatusBadRequest, err)
-		default:
-			api.WriteError(response, http.StatusInternalServerError, err)
-		}
-		return
-	}
-
-	api.WriteResponse(response, http.StatusOK, node)
+	api.WriteResponse(response, http.StatusNotImplemented, node)
 }
 
 // DeleteNode handles DELETE requests to remove a Node
 func (h *NodeHandler) DeleteNode(request *restful.Request, response *restful.Response) {
 	name := request.PathParameter("name")
-	if err := h.nodeRegistry.DeleteNode(request.Request.Context(), name); err != nil {
-		api.WriteError(response, http.StatusInternalServerError, err)
-		return
-	}
+	//
+	_ = name //assignment 8: Hook nodeRegistry.
 
-	api.WriteResponse(response, http.StatusNoContent, nil)
+	api.WriteResponse(response, http.StatusNotImplemented, name)
+
 }
 
 // ListNodes handles GET requests to list all Nodes
 func (h *NodeHandler) ListNodes(request *restful.Request, response *restful.Response) {
-	nodes, err := h.nodeRegistry.ListNodes(request.Request.Context())
-	if err != nil {
-		api.WriteError(response, http.StatusInternalServerError, err)
-		return
-	}
+	api.WriteResponse(response, http.StatusNotImplemented, "nodes")
 
-	api.WriteResponse(response, http.StatusOK, nodes)
 }
 
 // RegisterNodeRoutes registers Node routes with the WebService

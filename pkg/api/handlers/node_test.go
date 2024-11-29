@@ -53,6 +53,10 @@ func TestCreateNode(t *testing.T) {
 			require.NotEmpty(t, createdNode)
 
 			assert.Equal(t, node.Name, createdNode.Name)
+
+			registeredNode, err := nodeRegistry.GetNode(context.Background(), "test-node")
+			assert.NoError(t, err)
+			assert.Equal(t, node.Name, registeredNode.Name)
 		})
 	})
 
@@ -269,6 +273,10 @@ func TestUpdateNode(t *testing.T) {
 			err = json.Unmarshal(resp.Body.Bytes(), &returnedNode)
 			assert.NoError(t, err)
 			assert.True(t, returnedNode.Spec.Unschedulable)
+
+			updatedNode, err = nodeRegistry.GetNode(context.Background(), "test-node")
+			assert.NoError(t, err)
+			assert.True(t, updatedNode.Spec.Unschedulable)
 		})
 	})
 
